@@ -43,7 +43,7 @@ function plugin_init_stab() {
 
 function plugin_version_stab() {
    return [
-      'name'         => __('Split Timeline Action Buttons', 'workflows'),
+      'name'         => __('Split Timeline Action Buttons', 'stab'),
       'version'      => PLUGIN_STAB_VERSION,
       'author'       => 'Curtis Conard',
       'license'      => 'GPLv2+',
