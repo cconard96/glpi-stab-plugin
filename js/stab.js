@@ -193,11 +193,11 @@ $(document).ready(function() {
          });
          target_form.on('click', '.split-action-items a.dropdown-item', (e) => {
             const t = $(e.target);
-            target_form.find('form').find('input[name="_status"]').val(t.data('status'));
-            target_form.find('.card-footer button.split-action').html(t.find('i').html()+`
-            <i class="${t.data('icon-class')} me-2"></i>
-            ${__('Add')}
-         `);
+            target_form.find('form').find('input[name="_status"]').val(t.attr('data-status'));
+            target_form.find('.card-footer button.split-action').html(`
+                <i class="${t.attr('data-icon-class')} me-2"></i>
+                ${__('Add')}
+            `);
          });
       }
    });
