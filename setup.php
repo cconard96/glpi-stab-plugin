@@ -20,7 +20,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_STAB_VERSION', '1.0.1');
+define('PLUGIN_STAB_VERSION', '1.0.2');
 define('PLUGIN_STAB_MIN_GLPI', '10.0.0');
 define('PLUGIN_STAB_MAX_GLPI', '10.1.0');
 
@@ -29,7 +29,7 @@ function plugin_init_stab() {
 
    $PLUGIN_HOOKS['csrf_compliant']['stab'] = true;
 
-   if (Plugin::isPluginActive('stab')) {
+   if (Plugin::isPluginActive('stab') && !isCommandLine()) {
       $timeline_pages = ['/front/ticket.form.php', '/front/change.form.php', '/front/problem.form.php'];
       $url = strtok($_SERVER["REQUEST_URI"], '?');
       foreach ($timeline_pages as $page) {
