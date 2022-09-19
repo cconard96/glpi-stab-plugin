@@ -25,12 +25,18 @@ define('PLUGIN_STAB_MIN_GLPI', '10.0.0');
 define('PLUGIN_STAB_MAX_GLPI', '10.1.0');
 
 function plugin_init_stab() {
-   global $PLUGIN_HOOKS;
+   global $PLUGIN_HOOKS, $CFG_GLPI;
 
    $PLUGIN_HOOKS['csrf_compliant']['stab'] = true;
 
    if (Plugin::isPluginActive('stab') && !isCommandLine()) {
-      $timeline_pages = ['/front/ticket.form.php', '/front/change.form.php', '/front/problem.form.php'];
+       /** @var class-string<CommonITILObject>[] $itil_types */
+      $itil_types = isset($CFG_GLPI['itil_types']) ? $CFG_GLPI['itil_types'] : ['Ticket', 'Change', 'Problem'];
+      $timeline_pages = [];
+      /** @var class-string<CommonITILObject> $itil_type */
+       foreach ($itil_types as $itil_type) {
+         $timeline_pages[] = $itil_type::getFormURL(false);
+      }
       $url = strtok($_SERVER["REQUEST_URI"], '?');
       foreach ($timeline_pages as $page) {
          if (str_ends_with($url, $page)) {
