@@ -20,157 +20,22 @@
  */
 
 $(document).ready(function() {
+   const ajax_url = CFG_GLPI.root_doc+"/"+GLPI_PLUGINS_PATH.stab+"/ajax/status.php";
+
    $(document).on('click', '.timeline-buttons .main-actions .answer-action', (e) => {
-      const itil_status_opts = {
-         Ticket: [
-            {
-               value: 1,
-               label: _x('status', 'New'),
-               icon_class: 'itilstatus new fas fa-circle'
-            },
-            {
-               value: 2,
-               label: _x('status', 'Processing (assigned)'),
-               icon_class: 'itilstatus assigned far fa-circle'
-            },
-            {
-               value: 3,
-               label: _x('status', 'Processing (planned)'),
-               icon_class: 'itilstatus planned fas fa-calendar'
-            },
-            {
-               value: 4,
-               label: _x('status', 'Pending'),
-               icon_class: 'itilstatus waiting fas fa-circle'
-            },
-            {
-               value: 5,
-               label: _x('status', 'Solved'),
-               icon_class: 'itilstatus solved far fa-circle'
-            },
-            {
-               value: 6,
-               label: _x('status', 'Closed'),
-               icon_class: 'itilstatus closed fas fa-circle'
-            },
-         ],
-         Change: [
-            {
-               value: 1,
-               label: _x('status', 'New'),
-               icon_class: 'itilstatus new fas fa-circle'
-            },
-            {
-               value: 9,
-               label: __('Evaluation'),
-               icon_class: 'itilstatus eval fas fa-circle'
-            },
-            {
-               value: 10,
-               label: _n('Approval', 'Approvals', 1),
-               icon_class: 'itilstatus approval fas fa-question-circle'
-            },
-            {
-               value: 7,
-               label: _x('status', 'Accepted'),
-               icon_class: 'itilstatus accepted fas fa-check-circle'
-            },
-            {
-               value: 4,
-               label: _x('status', 'Pending'),
-               icon_class: 'itilstatus waiting fas fa-circle'
-            },
-            {
-               value: 11,
-               label: _x('change', 'Testing'),
-               icon_class: 'itilstatus test fas fa-question-circle'
-            },
-            {
-               value: 12,
-               label: __('Qualification'),
-               icon_class: 'itilstatus qualif far fa-circle'
-            },
-            {
-               value: 5,
-               label: __('Applied'),
-               icon_class: 'itilstatus solved fas fa-circle'
-            },
-            {
-               value: 8,
-               label: __('Review'),
-               icon_class: 'itilstatus observe fas fa-eye'
-            },
-            {
-               value: 6,
-               label: _x('status', 'Closed'),
-               icon_class: 'itilstatus closed fas fa-circle'
-            },
-            {
-               value: 14,
-               label: _x('status', 'Cancelled'),
-               icon_class: 'itilstatus CANCELED fas fa-ban'
-            },
-            {
-               value: 13,
-               label: _x('status', 'Refused'),
-               icon_class: 'itilstatus refused far fa-times-circle'
-            },
-         ],
-         Problem: [
-            {
-               value: 1,
-               label: _x('status', 'New'),
-               icon_class: 'itilstatus new fas fa-circle'
-            },
-            {
-               value: 7,
-               label: _x('status', 'Accepted'),
-               icon_class: 'itilstatus accepted fas fa-check-circle'
-            },
-            {
-               value: 2,
-               label: _x('status', 'Processing (assigned)'),
-               icon_class: 'itilstatus assigned far fa-circle'
-            },
-            {
-               value: 3,
-               label: _x('status', 'Processing (planned)'),
-               icon_class: 'itilstatus planned fas fa-calendar'
-            },
-            {
-               value: 4,
-               label: _x('status', 'Pending'),
-               icon_class: 'itilstatus waiting fas fa-circle'
-            },
-            {
-               value: 5,
-               label: _x('status', 'Solved'),
-               icon_class: 'itilstatus solved far fa-circle'
-            },
-            {
-               value: 8,
-               label: __('Under observation'),
-               icon_class: 'itilstatus observe fas fa-eye'
-            },
-            {
-               value: 6,
-               label: _x('status', 'Closed'),
-               icon_class: 'itilstatus closed fas fa-circle'
-            },
-         ]
-      };
       const target_form = $($(e.target).closest('button,a').data('bs-target'));
       const valid_forms = ['new-ITILFollowup-block','new-TicketTask-block','new-ChangeTask-block','new-ProblemTask-block'];
       if (!valid_forms.includes(target_form.attr('id'))) {
          return;
       }
       const parent_itemtype = target_form.find('input[name="itemtype"]').val();
+      const parent_items_id = target_form.find('input[name="items_id"]').val();
+
       const already_injected = target_form.find('.card-footer button.split-action').length > 0;
       if (!already_injected) {
          // Remove default button
          target_form.find('.card-footer button[name="add"]').remove();
-         // Inject hidden status input
-         target_form.find('form').prepend(`<input type="hidden" name="_status"/>`);
+
          // Add split button
          target_form.find('.card-footer').prepend(`
             <div class="btn-group">
@@ -183,14 +48,31 @@ $(document).ready(function() {
             </div>
          `);
          const action_item_list = target_form.find('.card-footer .split-action-items');
-         $(itil_status_opts[parent_itemtype]).each((i, o) => {
-            action_item_list.append(`
-            <li><a class="dropdown-item" href="#" data-status="${o.value}" data-icon-class="${o.icon_class}">
-                <i class="${o.icon_class}"></i>
-                ${o.label}
-             </a></li>
-         `);
+         $.ajax({
+            method: 'GET',
+            url: ajax_url,
+            data: {
+               itemtype: parent_itemtype,
+               items_id: parent_items_id,
+            }
+         }).done((data) => {
+            console.dir(data);
+            if (data['current_status'] !== undefined) {
+               const current_status = data['current_status'];
+               const status_options = data['allowed_statuses'];
+               $(status_options).each((i, o) => {
+                  action_item_list.append(`
+                     <li><a class="dropdown-item" href="#" data-status="${o.value}" data-icon-class="${o.icon_class}">
+                         <i class="${o.icon_class}"></i>
+                         ${o.label}
+                      </a></li>
+                  `);
+               });
+               // Inject hidden status input
+               target_form.find('form').prepend(`<input type="hidden" name="_status" value="${current_status}"/>`);
+            }
          });
+
          target_form.on('click', '.split-action-items a.dropdown-item', (e) => {
             const t = $(e.target);
             target_form.find('form').find('input[name="_status"]').val(t.attr('data-status'));
