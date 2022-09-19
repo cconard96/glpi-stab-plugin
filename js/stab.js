@@ -23,9 +23,9 @@ $(document).ready(function() {
    const ajax_url = CFG_GLPI.root_doc+"/"+GLPI_PLUGINS_PATH.stab+"/ajax/status.php";
 
    $(document).on('click', '.timeline-buttons .main-actions .answer-action', (e) => {
-      const target_form = $($(e.target).closest('button,a').data('bs-target'));
-      const valid_forms = ['new-ITILFollowup-block','new-TicketTask-block','new-ChangeTask-block','new-ProblemTask-block'];
-      if (!valid_forms.includes(target_form.attr('id'))) {
+      const target_form = $($(e.target).closest('button,a').data('bs-target'))
+      const valid_forms = [/^new-\S+Followup-block$/,/^new-\S+Task-blockS/];
+      if (!valid_forms.some((regex) => regex.test(target_form.attr('id')))) {
          return;
       }
       const parent_itemtype = target_form.find('input[name="itemtype"]').val();
