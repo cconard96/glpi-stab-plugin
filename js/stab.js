@@ -24,7 +24,7 @@ $(document).ready(function() {
 
    $(document).on('click', '.timeline-buttons .main-actions .answer-action', (e) => {
       const target_form = $($(e.target).closest('button,a').data('bs-target'))
-      const valid_forms = [/^new-\S+Followup-block$/,/^new-\S+Task-blockS/];
+      const valid_forms = [/^new-\S+Followup-block$/,/^new-\S+Task-block$/];
       if (!valid_forms.some((regex) => regex.test(target_form.attr('id')))) {
          return;
       }
@@ -56,7 +56,6 @@ $(document).ready(function() {
                items_id: parent_items_id,
             }
          }).done((data) => {
-            console.dir(data);
             if (data['current_status'] !== undefined) {
                const current_status = data['current_status'];
                const status_options = data['allowed_statuses'];
