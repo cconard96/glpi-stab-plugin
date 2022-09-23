@@ -29,7 +29,8 @@ $(document).ready(function() {
          return;
       }
       const parent_itemtype = target_form.find('input[name="itemtype"]').val();
-      const parent_items_id = target_form.find('input[name="items_id"]').val();
+      const specific_fk = (parent_itemtype + 's_id').toLowerCase();
+      const parent_items_id = target_form.find(`input[name="items_id"], input[name="${specific_fk}"] `).first().val();
 
       const already_injected = target_form.find('.card-footer button.split-action').length > 0;
       if (!already_injected) {
