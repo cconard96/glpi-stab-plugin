@@ -20,7 +20,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_STAB_VERSION', '1.1.2');
+define('PLUGIN_STAB_VERSION', '1.1.3');
 define('PLUGIN_STAB_MIN_GLPI', '10.0.0');
 define('PLUGIN_STAB_MAX_GLPI', '10.1.0');
 
