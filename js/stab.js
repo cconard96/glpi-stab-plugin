@@ -48,6 +48,10 @@ $(document).ready(function() {
                </ul>
             </div>
          `);
+
+         // Fix pending reason control display (instead of width 100%, it should be flex-grow: 1)
+         target_form.find('.card-footer > .input-group').css('flex-grow', '1').css('width', 'auto');
+
          const action_item_list = target_form.find('.card-footer .split-action-items');
          $.ajax({
             method: 'GET',
