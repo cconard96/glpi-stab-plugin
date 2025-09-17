@@ -20,9 +20,11 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_STAB_VERSION', '1.1.3');
-define('PLUGIN_STAB_MIN_GLPI', '10.0.0');
-define('PLUGIN_STAB_MAX_GLPI', '10.1.0');
+use Glpi\Plugin\Hooks;
+
+define('PLUGIN_STAB_VERSION', '2.0.0');
+define('PLUGIN_STAB_MIN_GLPI', '11.0.0');
+define('PLUGIN_STAB_MAX_GLPI', '11.1.0');
 
 function plugin_init_stab() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
@@ -31,7 +33,7 @@ function plugin_init_stab() {
 
    if (Plugin::isPluginActive('stab') && !isCommandLine()) {
        /** @var class-string<CommonITILObject>[] $itil_types */
-      $itil_types = isset($CFG_GLPI['itil_types']) ? $CFG_GLPI['itil_types'] : ['Ticket', 'Change', 'Problem'];
+      $itil_types = $CFG_GLPI['itil_types'] ?? ['Ticket', 'Change', 'Problem'];
       $timeline_pages = [];
       /** @var class-string<CommonITILObject> $itil_type */
        foreach ($itil_types as $itil_type) {
@@ -40,7 +42,7 @@ function plugin_init_stab() {
       $url = strtok($_SERVER["REQUEST_URI"], '?');
       foreach ($timeline_pages as $page) {
          if (str_ends_with($url, $page)) {
-            $PLUGIN_HOOKS['add_javascript']['stab'][] = 'js/stab.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['stab'][] = 'js/stab.js';
             break;
          }
       }
