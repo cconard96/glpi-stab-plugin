@@ -20,7 +20,7 @@
  */
 
 $(document).ready(function() {
-   const ajax_url = CFG_GLPI.root_doc+"/"+GLPI_PLUGINS_PATH.stab+"/ajax/status.php";
+   const ajax_url = CFG_GLPI.root_doc+"/plugins/stab/ajax/status.php";
 
    $(document).on('click', '.timeline-buttons .main-actions .answer-action', (e) => {
       const target_form = $($(e.target).closest('button,a').data('bs-target'))
