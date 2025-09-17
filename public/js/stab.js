@@ -80,6 +80,8 @@ $(document).ready(function() {
          target_form.on('click', '.split-action-items a.dropdown-item', (e) => {
             const t = $(e.target);
             target_form.find('form').find('input[name="_status"]').val(t.attr('data-status'));
+            // Disable pending reason as pending reason will force the status to Pending regardless of selected status
+            target_form.find('input[type="checkbox"][name="pending"]').prop('checked', false);
             target_form.find('.card-footer button.split-action').html(`
                 <i class="${t.attr('data-icon-class')} me-2"></i>
                 ${__('Add')}
