@@ -22,9 +22,9 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_STAB_VERSION', '2.0.2');
+define('PLUGIN_STAB_VERSION', '3.0.0');
 define('PLUGIN_STAB_MIN_GLPI', '11.0.0');
-define('PLUGIN_STAB_MAX_GLPI', '11.1.0');
+define('PLUGIN_STAB_MAX_GLPI', '12.1.0');
 
 function plugin_init_stab() {
    global $PLUGIN_HOOKS, $CFG_GLPI;

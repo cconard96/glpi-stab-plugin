@@ -30,7 +30,6 @@ $(document).ready(function() {
         }
         // Check if GLPI is going to load the form data from the server
         const must_await_form = target_form.find('[data-answer-loaded]').length > 0;
-        console.log('Need to wait for form to load?', must_await_form);
         const max_wait_time = 5000;
         const check_polling_interval = 100;
         if (must_await_form) {
@@ -53,7 +52,6 @@ $(document).ready(function() {
     });
 
     function injectSTABButton(target_form) {
-        console.log('Injecting STAB button into form', target_form.attr('id'));
         const parent_itemtype = target_form.find('input[name="itemtype"]').val();
         const specific_fk = (parent_itemtype + 's_id').toLowerCase();
         const parent_items_id = target_form.find(`input[name="items_id"], input[name="${specific_fk}"] `).first().val();
@@ -68,7 +66,7 @@ $(document).ready(function() {
             <div class="btn-group">
                <button type="submit" class="btn btn-primary split-action" name="add">${__('Add')}</button>
                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="sr-only">Toggle Dropdown</span>
+                  <span class="visually-hidden">Toggle Dropdown</span>
                </button>
                <ul class="dropdown-menu split-action-items">
                </ul>
